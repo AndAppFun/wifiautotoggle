@@ -13,7 +13,7 @@ public class WiFiChangedReceiver extends BroadcastReceiver {
 	/**
 	 * Version
 	 */
-	static final public String version = "$Id: WiFiChangedReceiver.java 13 2011-09-03 01:02:00Z andappfun $";
+	static final public String version = "$Id$";
 
 	@Override
 	public void onReceive(Context context, Intent intent) {

@@ -17,7 +17,7 @@ public class ListItemDetailsView extends Activity {
 	/**
 	 * Version
 	 */
-	static final public String version = "$Id: ListItemDetailsView.java 13 2011-09-03 01:02:00Z andappfun $";
+	static final public String version = "$Id$";
 
 	private TextView locationNameTV;
 	private TextView addedDateTimeTV;

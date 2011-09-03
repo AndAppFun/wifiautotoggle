@@ -17,7 +17,7 @@ public class LocationChangedService extends IntentService {
 	/**
 	 * Version
 	 */
-	static final public String version = "$Id: LocationChangedService.java 13 2011-09-03 01:02:00Z andappfun $";
+	static final public String version = "$Id$";
 
 	public LocationChangedService() {
 		super("LocationChangedService");

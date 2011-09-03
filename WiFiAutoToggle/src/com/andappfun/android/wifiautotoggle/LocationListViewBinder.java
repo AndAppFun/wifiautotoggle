@@ -17,7 +17,7 @@ public class LocationListViewBinder implements ViewBinder {
 	/**
 	 * Version
 	 */
-	static final public String version = "$Id: LocationListViewBinder.java 13 2011-09-03 01:02:00Z andappfun $";
+	static final public String version = "$Id$";
 
 	private DateFormat dateFormat;
 	private DateFormat timeFormat;

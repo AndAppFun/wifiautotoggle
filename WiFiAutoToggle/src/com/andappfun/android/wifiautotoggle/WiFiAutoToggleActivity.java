@@ -52,7 +52,7 @@ public class WiFiAutoToggleActivity extends ListActivity implements
 	/**
 	 * Version
 	 */
-	static final public String version = "$Id: WiFiAutoToggleActivity.java 13 2011-09-03 01:02:00Z andappfun $";
+	static final public String version = "$Id$";
 
 	private WiFiLog log;
 

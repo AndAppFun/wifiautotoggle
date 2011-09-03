@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- version = "$Id: list_item_details_edit.xml 4 2011-08-18 23:45:14Z andappfun $"; -->
+<!-- version = "$Id$"; -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="vertical" android:layout_width="match_parent"
 	android:layout_height="match_parent">

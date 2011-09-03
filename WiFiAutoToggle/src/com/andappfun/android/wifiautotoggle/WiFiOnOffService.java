@@ -22,7 +22,7 @@ public class WiFiOnOffService extends IntentService {
 	/**
 	 * Version
 	 */
-	static final public String version = "$Id: WiFiOnOffService.java 13 2011-09-03 01:02:00Z andappfun $";
+	static final public String version = "$Id$";
 
 	/**
 	 * notification id

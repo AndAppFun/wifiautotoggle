@@ -23,7 +23,7 @@ public class WiFiLocationProvider extends ContentProvider {
 	/**
 	 * Version
 	 */
-	static final public String version = "$Id: WiFiLocationProvider.java 13 2011-09-03 01:02:00Z andappfun $";
+	static final public String version = "$Id$";
 
 	private static final String DATABASE_NAME = "autowifitoggle.db";
 	private static final int DATABASE_VERSION = 1;

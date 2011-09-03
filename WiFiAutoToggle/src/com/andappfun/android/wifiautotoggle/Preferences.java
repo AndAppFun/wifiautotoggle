@@ -10,7 +10,7 @@ public class Preferences extends PreferenceActivity {
 	/**
 	 * Version
 	 */
-	static final public String version = "$Id: Preferences.java 13 2011-09-03 01:02:00Z andappfun $";
+	static final public String version = "$Id$";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
