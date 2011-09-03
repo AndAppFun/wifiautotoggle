@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- version = "$Id: list_item_details_edit.xml 4 2011-08-18 23:45:14Z andappfun $"; -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:layout_width="match_parent"
+	android:layout_height="match_parent">
+	<TextView android:text="@string/listItemDetailsEditHeader"
+		android:layout_height="wrap_content" android:layout_width="match_parent"
+		android:textColor="#FF000000" android:background="#FFC0C0C0" />
+	<ScrollView android:id="@+id/scrollView1"
+		android:layout_height="wrap_content" android:layout_width="match_parent">
+		<LinearLayout android:layout_width="match_parent"
+			android:id="@+id/linearLayout1" android:layout_height="wrap_content"
+			android:orientation="vertical">
+			<EditText android:layout_height="wrap_content"
+				android:layout_width="match_parent" android:text="@string/listItemDetailsEditLocation"
+				android:id="@+id/listItemDetailsEditLocationName">
+			</EditText>
+			<TableLayout android:layout_height="wrap_content"
+				android:layout_width="match_parent" android:id="@+id/listItemDetailsEditTable"
+				android:stretchColumns="1">
+				<TableRow>
+					<TextView android:layout_column="1" android:padding="3dip"
+						android:text="@string/listItemDetailsEditAdded" />
+					<TextView android:gravity="right" android:padding="3dip"
+						android:id="@+id/listItemDetailsEditAddedDateTime" />
+				</TableRow>
+				<TableRow>
+					<TextView android:layout_column="1" android:padding="3dip"
+						android:text="@string/listItemDetailsEditLatitude" />
+					<TextView android:gravity="right" android:padding="3dip"
+						android:id="@+id/listItemDetailsEditLatitude" />
+				</TableRow>
+				<TableRow>
+					<TextView android:layout_column="1" android:padding="3dip"
+						android:text="@string/listItemDetailsEditLongitude" />
+					<TextView android:gravity="right" android:padding="3dip"
+						android:id="@+id/listItemDetailsEditLongitude" />
+				</TableRow>
+				<TableRow>
+					<TextView android:layout_column="1" android:padding="3dip"
+						android:text="@string/listItemDetailsEditAccuracy" />
+					<TextView android:gravity="right" android:padding="3dip"
+						android:id="@+id/listItemDetailsEditAccuracy" />
+				</TableRow>
+			</TableLayout>
+		</LinearLayout>
+	</ScrollView>
+	<TableLayout android:id="@+id/listItemsDetailsEditButtonsTable"
+		android:layout_height="wrap_content" android:layout_width="match_parent"
+		android:background="#FFC0C0C0" android:stretchColumns="*">
+		<TableRow>
+			<Button android:id="@+id/listItemsDetailsEditDone"
+				android:text="@string/listItemsDetailsEditDone"
+				android:layout_height="wrap_content" android:layout_width="match_parent">
+			</Button>
+			<Button android:id="@+id/listItemsDetailsEditCancel"
+				android:text="@string/listItemsDetailsEditCancel"
+				android:layout_height="wrap_content" android:layout_width="match_parent">
+			</Button>
+		</TableRow>
+	</TableLayout>
+</LinearLayout>

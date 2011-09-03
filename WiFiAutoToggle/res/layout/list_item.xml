@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- version = "$Id: list_item.xml 4 2011-08-18 23:45:14Z andappfun $"; -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:orientation="vertical">
+	<TextView android:id="@+id/listLocationName" android:gravity="left"
+		android:textSize="24sp" android:textStyle="bold"
+		android:layout_height="wrap_content" android:layout_width="fill_parent" />
+	<TextView android:id="@+id/listLocationCreated"
+		android:gravity="right" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" />
+</LinearLayout>

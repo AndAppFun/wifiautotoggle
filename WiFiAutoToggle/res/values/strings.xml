@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- version = "$Id: strings.xml 10 2011-08-27 20:27:53Z andappfun $"; -->
+<resources>
+	<string name="dialogAboutTitle">About</string>
+	<string name="dialogAboutVersion">Version: </string>
+
+	<string name="appName">Wi-Fi Auto Toggle</string>
+	<string name="listEmpty">No locations stored</string>
+
+	<string name="preferencesEnableTitle">Wi-Fi Auto Toggle</string>
+	<string name="preferencesEnableSummary">Enabling Wi-Fi auto toggle</string>
+	<string name="preferencesEnableOn">Toggle enabled</string>
+	<string name="preferencesEnableOff">Toggle disabled</string>
+	<string name="preferencesLogTitle">Logging</string>
+	<string name="preferencesLogSummary">Enabling logging</string>
+	<string name="preferencesLogOn">Logging enabled</string>
+	<string name="preferencesLogOff">Logging disabled</string>
+
+	<string name="menuAbout">About</string>
+	<string name="menuItemAbout">About</string>
+	<string name="menuItemPrefs">Preferences</string>
+
+	<string name="prefsName">Preferences</string>
+
+	<string name="serviceWiFiDisabled">Wi-Fi disabled</string>
+	<string name="serviceWiFiAlreadyDisabled">Wi-Fi already disabled</string>
+	<string name="serviceWiFiEnabled">Wi-Fi enabled</string>
+	<string name="serviceWiFiAlreadyEnabled">Wi-Fi already enabled</string>
+	<string name="serviceLeaving">Leaving</string>
+	<string name="serviceEntering">At</string>
+
+	<string name="autowifiButtonLabel">Wi-Fi</string>
+	<string name="autowifiCurrentLocation">Current location</string>
+	<string name="autowifiLatitude">Latitude</string>
+	<string name="autowifiLongitude">Longitude</string>
+	<string name="autowifiAccuracy">Accuracy</string>
+	<string name="autowifiLocations">Locations</string>
+
+	<string name="listItemDetailsEditHeader">Edit location</string>
+	<string name="listItemDetailsEditLocation">Location</string>
+	<string name="listItemDetailsEditAdded">Added</string>
+	<string name="listItemDetailsEditLatitude">Latitude</string>
+	<string name="listItemDetailsEditLongitude">Longitude</string>
+	<string name="listItemDetailsEditAccuracy">Accuracy</string>
+	<string name="listItemsDetailsEditDone">Done</string>
+	<string name="listItemsDetailsEditCancel">Cancel</string>
+	<string name="listItemsDetailsEditDataSaved">Data has been saved</string>
+
+	<string name="listItemDetailsViewLocation">Location</string>
+	<string name="listItemDetailsViewAdded">Added</string>
+	<string name="listItemDetailsViewLatitude">Latitude</string>
+	<string name="listItemDetailsViewLongitude">Longitude</string>
+	<string name="listItemDetailsViewAccuracy">Accuracy</string>
+
+	<string name="listContextMenuTitle">Options</string>
+	<string name="listContextMenuView">View</string>
+	<string name="listContextMenuEdit">Edit</string>
+	<string name="listContextMenuDelete">Delete</string>
+	
+	<string name="wifiDeleteLocationQuestion">Delete this location?</string>
+	<string name="wifiDeleteYes">Yes</string>
+	<string name="wifiDeleteNo">No</string>
+	<string name="wifiDeleteDeleted">Location has been deleted</string>
+
+</resources>
