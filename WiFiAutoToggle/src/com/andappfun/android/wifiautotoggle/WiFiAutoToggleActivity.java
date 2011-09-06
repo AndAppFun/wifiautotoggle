@@ -30,6 +30,7 @@ import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -248,14 +249,7 @@ public class WiFiAutoToggleActivity extends ListActivity implements
 		t.start();
 	}
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-
-		registerReceiver(wifiStateReceiver, wifiStateFilter);
-
-		updateWiFi();
-
+	private void requestLocationUpdates() {
 		/* define criteria */
 		Criteria criteria = new Criteria();
 		criteria.setAltitudeRequired(false);
@@ -268,14 +262,37 @@ public class WiFiAutoToggleActivity extends ListActivity implements
 		/* get best provider */
 		String provider = locationManager.getBestProvider(criteria, true);
 
-		/* get last known location */
-		Location location = locationManager.getLastKnownLocation(provider);
-		updateLocation(location);
+		if (provider != null) {
+			/* get last known location */
+			Location location = locationManager.getLastKnownLocation(provider);
+			updateLocation(location);
 
-		/* register for location updates */
-		locationManager.requestLocationUpdates(provider, 0, 0, this);
+			/* register for location updates */
+			locationManager.requestLocationUpdates(provider, 0, 0, this);
+		} else {
+			/* display dialog enabling accessing location & security settings */
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage(R.string.noProviderMessage);
+			builder.setPositiveButton(R.string.noProviderOKButton,
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							Intent myIntent = new Intent(
+									Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+							startActivity(myIntent);
+							dialog.cancel();
+						}
+					});
+			builder.setNegativeButton(R.string.noProviderCancelButton,
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							dialog.cancel();
+						}
+					});
+			AlertDialog dialog = builder.create();
+			dialog.show();
+		}
 	}
-
+	
 	private void updateLocation(Location location) {
 		if (location != null) {
 			autowifiLatitude.setText(Double.toString(location.getLatitude()));
@@ -289,6 +306,21 @@ public class WiFiAutoToggleActivity extends ListActivity implements
 			autowifiLongitude.setText("");
 			autowifiAccuracy.setText("");
 		}
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		registerReceiver(wifiStateReceiver, wifiStateFilter);
+
+		updateWiFi();
+		
+		/* reset location information */
+		updateLocation(null);
+		
+		requestLocationUpdates();
+
 	}
 
 	@Override
@@ -376,7 +408,7 @@ public class WiFiAutoToggleActivity extends ListActivity implements
 							locationManager
 									.removeProximityAlert(startServiceIntent);
 							if (log.isInfoEnabled()) {
-								log.info("WiFiAutoToggleActivity.onContextItemSelected() delete, remove proximity alert for location: "
+								log.info("WiFiAutoToggleActivity.onContextItemSelected(): delete, remove proximity alert for location: "
 										+ id);
 							}
 
@@ -418,7 +450,7 @@ public class WiFiAutoToggleActivity extends ListActivity implements
 						+ pi.versionCode + ")");
 			} catch (NameNotFoundException e) {
 				if (log.isErrorEnabled()) {
-					log.error("WiFiAutoToggleActivity.onCreateDialog DIALOG_ABOUT error: "
+					log.error("WiFiAutoToggleActivity.onCreateDialog(): DIALOG_ABOUT error: "
 							+ e.toString());
 				}
 			}
@@ -472,13 +504,16 @@ public class WiFiAutoToggleActivity extends ListActivity implements
 
 	@Override
 	public void onProviderDisabled(String provider) {
+		requestLocationUpdates();
 	}
 
 	@Override
 	public void onProviderEnabled(String provider) {
+		requestLocationUpdates();
 	}
 
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
+		requestLocationUpdates();
 	}
 }

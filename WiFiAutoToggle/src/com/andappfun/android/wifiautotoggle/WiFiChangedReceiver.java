@@ -41,22 +41,29 @@ public class WiFiChangedReceiver extends BroadcastReceiver {
 			/* get best provider */
 			String provider = locationManager.getBestProvider(criteria, true);
 
-			Intent startIntent = new Intent(context,
-					LocationChangedService.class);
-			PendingIntent pendingIntent = PendingIntent.getService(context, 0,
-					startIntent, 0);
+			if (provider != null) {
 
-			/* request location updates */
-			locationManager.requestLocationUpdates(provider, 0, 0,
-					pendingIntent);
-			if (log.isInfoEnabled()) {
-				log.info("WiFiChangedReceiver.onReceive(): WiFi enabled - requesting location updates from "
-						+ provider + " provider");
+				Intent startIntent = new Intent(context,
+						LocationChangedService.class);
+				PendingIntent pendingIntent = PendingIntent.getService(context,
+						0, startIntent, 0);
+
+				/* request location updates */
+				locationManager.requestLocationUpdates(provider, 0, 0,
+						pendingIntent);
+				if (log.isInfoEnabled()) {
+					log.info("WiFiChangedReceiver.onReceive(): WiFi enabled - requesting location updates from "
+							+ provider + " provider");
+				}
+				/*
+				 * location updates request will be removed from the service
+				 * once needed location has been obtained
+				 */
+			} else {
+				if (log.isErrorEnabled()) {
+					log.error("WiFiChangedReceiver.onReceive(): unable to obtain location provider, location updates not requested");
+				}
 			}
-			/*
-			 * location updates request will be removed from the service once
-			 * needed location has been obtained
-			 */
 
 		}
 			break;
