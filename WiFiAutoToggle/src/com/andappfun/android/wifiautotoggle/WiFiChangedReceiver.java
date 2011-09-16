@@ -22,7 +22,7 @@ public class WiFiChangedReceiver extends BroadcastReceiver {
 		WiFiLog log = new WiFiLog(context);
 
 		int state = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE,
-				WifiManager.WIFI_STATE_DISABLED);
+				WifiManager.WIFI_STATE_UNKNOWN);
 
 		switch (state) {
 		case WifiManager.WIFI_STATE_ENABLED: {

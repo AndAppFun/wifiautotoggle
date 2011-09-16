@@ -292,7 +292,7 @@ public class WiFiAutoToggleActivity extends ListActivity implements
 			dialog.show();
 		}
 	}
-	
+
 	private void updateLocation(Location location) {
 		if (location != null) {
 			autowifiLatitude.setText(Double.toString(location.getLatitude()));
@@ -315,10 +315,10 @@ public class WiFiAutoToggleActivity extends ListActivity implements
 		registerReceiver(wifiStateReceiver, wifiStateFilter);
 
 		updateWiFi();
-		
+
 		/* reset location information */
 		updateLocation(null);
-		
+
 		requestLocationUpdates();
 
 	}
@@ -400,11 +400,13 @@ public class WiFiAutoToggleActivity extends ListActivity implements
 							getContentResolver().delete(uri, null, null);
 
 							/* remove proximity alert */
-							Intent intent = new Intent(getApplicationContext(),
+							Intent startIntent = new Intent(
+									getApplicationContext(),
 									WiFiOnOffService.class);
+							startIntent.setData(uri);
 							PendingIntent startServiceIntent = PendingIntent
 									.getService(getApplicationContext(), 0,
-											intent, 0);
+											startIntent, 0);
 							locationManager
 									.removeProximityAlert(startServiceIntent);
 							if (log.isInfoEnabled()) {

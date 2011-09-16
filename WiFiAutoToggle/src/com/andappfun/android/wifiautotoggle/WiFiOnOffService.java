@@ -1,7 +1,5 @@
 package com.andappfun.android.wifiautotoggle;
 
-import com.andappfun.android.wifiautotoggle.R;
-
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -61,11 +59,50 @@ public class WiFiOnOffService extends IntentService {
 		if (uri != null) {
 			/* check if the intent has the right data */
 			if (uriMatcher.match(uri) == LOCATION_ID) {
-				/* check if the toggle is enabled */
-				SharedPreferences p = PreferenceManager
-						.getDefaultSharedPreferences(getApplicationContext());
-				if (p.getBoolean("enabledKey", true)) {
-					toggleWifi(intent);
+				ContentResolver cr = getContentResolver();
+				Cursor c = cr.query(uri, null, null, null, null);
+				switch (c.getCount()) {
+
+				case 1:
+					/* check if the toggle is enabled */
+					SharedPreferences p = PreferenceManager
+							.getDefaultSharedPreferences(getApplicationContext());
+					if (p.getBoolean("enabledKey", true)) {
+						String name = null;
+						if (c.moveToFirst()) {
+							name = c.getString(c
+									.getColumnIndex(Definitions.Location.NAME));
+						}
+						toggleWifi(intent, name);
+					}
+					break;
+
+				case 0:
+					/* no such location in the database, remove proximity alert */
+					Intent startIntent = new Intent(getApplicationContext(),
+							WiFiOnOffService.class);
+					startIntent.setData(uri);
+					PendingIntent startServiceIntent = PendingIntent
+							.getService(getApplicationContext(), 0,
+									startIntent, 0);
+					LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+					locationManager.removeProximityAlert(startServiceIntent);
+					if (log.isInfoEnabled()) {
+						log.info("WiFiOnOffService.onHandleIntent(): location "
+								+ uri.getPathSegments().get(1)
+								+ " not found, remove proximity alert");
+					}
+
+					break;
+
+				default:
+					/* log an error */
+					if (log.isErrorEnabled()) {
+						log.error("WiFiOnOffService.onHandleIntent():  "
+								+ c.getCount() + " rows found for location: "
+								+ uri);
+					}
+					break;
 				}
 			}
 		}
@@ -74,8 +111,11 @@ public class WiFiOnOffService extends IntentService {
 	/**
 	 * Toggle Wi-Fi
 	 * 
+	 * @param name
+	 *            location name
+	 * 
 	 */
-	private void toggleWifi(Intent intent) {
+	private void toggleWifi(Intent intent, String name) {
 		/* get wi-fi manager */
 		WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 
@@ -86,44 +126,14 @@ public class WiFiOnOffService extends IntentService {
 				false)) {
 			/* turn Wi-Fi on when entering */
 			if (wifiManager.setWifiEnabled(true)) {
-				notifyEnabled(intent, bWiFiEnabled);
+				notifyEnabled(intent, bWiFiEnabled, name);
 			}
 		} else {
 			/* turn Wi-Fi off when leaving */
 			if (wifiManager.setWifiEnabled(false)) {
-				notifyDisabled(intent, bWiFiEnabled);
+				notifyDisabled(intent, bWiFiEnabled, name);
 			}
 		}
-	}
-
-	/**
-	 * Get location name based on the location id from the intent
-	 * 
-	 * @param intent
-	 *            intent with location id as an extra
-	 * @return String containing location name, or null if it can't be found
-	 */
-	private String getLocationName(Intent intent) {
-		String name = null;
-
-		Uri uri = intent.getData();
-		if (uri != null) {
-			ContentResolver cr = getContentResolver();
-			Cursor c = cr.query(uri, null, null, null, null);
-			if (c.getCount() != 1) {
-				if (log.isErrorEnabled()) {
-					log.error("WiFiOnOffService.getLocationName(): "
-							+ c.getCount() + " rows returned for " + uri);
-				}
-				throw new RuntimeException(c.getCount() + " rows returned for "
-						+ uri);
-			}
-			if (c.moveToFirst()) {
-				name = c.getString(c.getColumnIndex(Definitions.Location.NAME));
-			}
-			c.close();
-		}
-		return name;
 	}
 
 	/**
@@ -131,11 +141,13 @@ public class WiFiOnOffService extends IntentService {
 	 * 
 	 * @param bWiFiAlreadyEnabled
 	 *            was Wi-Fi enabled before
+	 * @param name
+	 *            location name
 	 */
-	private void notifyEnabled(Intent intent, boolean bWiFiAlreadyEnabled) {
+	private void notifyEnabled(Intent intent, boolean bWiFiAlreadyEnabled,
+			String name) {
 		/* create notification text including location name */
 		StringBuffer b = new StringBuffer();
-		String name = getLocationName(intent);
 		if (name != null) {
 			b.append(getString(R.string.serviceEntering));
 			b.append(" ");
@@ -173,11 +185,13 @@ public class WiFiOnOffService extends IntentService {
 	 * 
 	 * @param bWiFiAlreadyEnabled
 	 *            was Wi-Fi enabled before
+	 * @param name
+	 *            location name
 	 */
-	private void notifyDisabled(Intent intent, boolean bWiFiAlreadyEnabled) {
+	private void notifyDisabled(Intent intent, boolean bWiFiAlreadyEnabled,
+			String name) {
 		/* create notification text including location name */
 		StringBuffer b = new StringBuffer();
-		String name = getLocationName(intent);
 		if (name != null) {
 			b.append(getString(R.string.serviceLeaving));
 			b.append(" ");

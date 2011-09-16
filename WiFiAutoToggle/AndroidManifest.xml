@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- version = "$Id$"; -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	android:versionCode="2" android:versionName="1.0.1"
-	android:installLocation="preferExternal" package="com.andappfun.android.wifiautotoggle">
+	android:installLocation="preferExternal" package="com.andappfun.android.wifiautotoggle" android:versionCode="3" android:versionName="1.0.2">
 
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
