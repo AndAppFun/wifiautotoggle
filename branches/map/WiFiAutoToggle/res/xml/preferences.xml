@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- version = "$Id$"; -->
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+	<CheckBoxPreference android:key="enabledKey"
+		android:defaultValue="true" android:title="@string/preferencesEnableTitle"
+		android:summaryOff="@string/preferencesEnableOff" android:summary="@string/preferencesEnableSummary"
+		android:summaryOn="@string/preferencesEnableOn" />
+	<CheckBoxPreference android:key="loggingKey"
+		android:defaultValue="false" android:title="@string/preferencesLogTitle"
+		android:summary="@string/preferencesLogSummary" android:summaryOn="@string/preferencesLogOn"
+		android:summaryOff="@string/preferencesLogOff" />
+</PreferenceScreen>
