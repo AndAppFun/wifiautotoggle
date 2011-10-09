@@ -65,9 +65,9 @@ public class WiFiOnOffService extends IntentService {
 
 				case 1:
 					/* check if the toggle is enabled */
-					SharedPreferences p = PreferenceManager
+					SharedPreferences preferences = PreferenceManager
 							.getDefaultSharedPreferences(getApplicationContext());
-					if (p.getBoolean("enabledKey", true)) {
+					if (preferences.getBoolean("enabledKey", true)) {
 						String name = null;
 						if (c.moveToFirst()) {
 							name = c.getString(c
@@ -146,37 +146,48 @@ public class WiFiOnOffService extends IntentService {
 	 */
 	private void notifyEnabled(Intent intent, boolean bWiFiAlreadyEnabled,
 			String name) {
-		/* create notification text including location name */
-		StringBuffer b = new StringBuffer();
-		if (name != null) {
-			b.append(getString(R.string.serviceEntering));
-			b.append(" ");
-			b.append(name);
-		}
 
-		Notification notification = new Notification(R.drawable.wifion,
-				b.toString(), System.currentTimeMillis());
-		Intent notificationIntent = new Intent(this,
-				WiFiAutoToggleActivity.class);
-		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-				notificationIntent, 0);
+		SharedPreferences preferences = PreferenceManager
+				.getDefaultSharedPreferences(getApplicationContext());
 
-		/* set title */
-		String title;
-		if (bWiFiAlreadyEnabled)
-			title = getString(R.string.serviceWiFiAlreadyEnabled);
-		else
-			title = getString(R.string.serviceWiFiEnabled);
+		String notificationPreference = preferences.getString(
+				"notificationIconKey", "always");
 
-		notification.setLatestEventInfo(getApplicationContext(), title,
-				b.toString(), contentIntent);
+		if (notificationPreference.compareTo("always") == 0
+				|| (notificationPreference.compareTo("onChange") == 0 && !bWiFiAlreadyEnabled)) {
 
-		NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-		notificationManager.notify(WiFiOnOffService.NOTIFICATION_ID,
-				notification);
-		if (log.isInfoEnabled()) {
-			log.info("WiFiOnOffService.notifyEnabled(): text: " + b.toString()
-					+ " intent: " + intent);
+			/* create notification text including location name */
+			StringBuffer b = new StringBuffer();
+			if (name != null) {
+				b.append(getString(R.string.serviceEntering));
+				b.append(" ");
+				b.append(name);
+			}
+
+			Notification notification = new Notification(R.drawable.wifion,
+					b.toString(), System.currentTimeMillis());
+			Intent notificationIntent = new Intent(this,
+					WiFiAutoToggleActivity.class);
+			PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+					notificationIntent, 0);
+
+			/* set title */
+			String title;
+			if (bWiFiAlreadyEnabled)
+				title = getString(R.string.serviceWiFiAlreadyEnabled);
+			else
+				title = getString(R.string.serviceWiFiEnabled);
+
+			notification.setLatestEventInfo(getApplicationContext(), title,
+					b.toString(), contentIntent);
+
+			NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+			notificationManager.notify(WiFiOnOffService.NOTIFICATION_ID,
+					notification);
+			if (log.isInfoEnabled()) {
+				log.info("WiFiOnOffService.notifyEnabled(): text: "
+						+ b.toString() + " intent: " + intent);
+			}
 		}
 	}
 
@@ -190,37 +201,48 @@ public class WiFiOnOffService extends IntentService {
 	 */
 	private void notifyDisabled(Intent intent, boolean bWiFiAlreadyEnabled,
 			String name) {
-		/* create notification text including location name */
-		StringBuffer b = new StringBuffer();
-		if (name != null) {
-			b.append(getString(R.string.serviceLeaving));
-			b.append(" ");
-			b.append(name);
-		}
 
-		Notification notification = new Notification(R.drawable.wifioff,
-				b.toString(), System.currentTimeMillis());
-		Intent notificationIntent = new Intent(this,
-				WiFiAutoToggleActivity.class);
-		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-				notificationIntent, 0);
+		SharedPreferences preferences = PreferenceManager
+				.getDefaultSharedPreferences(getApplicationContext());
 
-		/* set title */
-		String title;
-		if (bWiFiAlreadyEnabled)
-			title = getString(R.string.serviceWiFiDisabled);
-		else
-			title = getString(R.string.serviceWiFiAlreadyDisabled);
+		String notificationPreference = preferences.getString(
+				"notificationIconKey", "always");
 
-		notification.setLatestEventInfo(getApplicationContext(), title,
-				b.toString(), contentIntent);
+		if (notificationPreference.compareTo("always") == 0
+				|| (notificationPreference.compareTo("onChange") == 0 && bWiFiAlreadyEnabled)) {
 
-		NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-		notificationManager.notify(WiFiOnOffService.NOTIFICATION_ID,
-				notification);
-		if (log.isInfoEnabled()) {
-			log.info("WiFiOnOffService.notifyDisabled(): text: " + b.toString()
-					+ " intent: " + intent);
+			/* create notification text including location name */
+			StringBuffer b = new StringBuffer();
+			if (name != null) {
+				b.append(getString(R.string.serviceLeaving));
+				b.append(" ");
+				b.append(name);
+			}
+
+			Notification notification = new Notification(R.drawable.wifioff,
+					b.toString(), System.currentTimeMillis());
+			Intent notificationIntent = new Intent(this,
+					WiFiAutoToggleActivity.class);
+			PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+					notificationIntent, 0);
+
+			/* set title */
+			String title;
+			if (bWiFiAlreadyEnabled)
+				title = getString(R.string.serviceWiFiDisabled);
+			else
+				title = getString(R.string.serviceWiFiAlreadyDisabled);
+
+			notification.setLatestEventInfo(getApplicationContext(), title,
+					b.toString(), contentIntent);
+
+			NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+			notificationManager.notify(WiFiOnOffService.NOTIFICATION_ID,
+					notification);
+			if (log.isInfoEnabled()) {
+				log.info("WiFiOnOffService.notifyDisabled(): text: "
+						+ b.toString() + " intent: " + intent);
+			}
 		}
 	}
 }

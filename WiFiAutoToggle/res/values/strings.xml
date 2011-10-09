@@ -11,6 +11,7 @@
 	<string name="preferencesEnableSummary">Enabling Wi-Fi auto toggle</string>
 	<string name="preferencesEnableOn">Toggle enabled</string>
 	<string name="preferencesEnableOff">Toggle disabled</string>
+	<string name="preferencesNotificationIconTitle">Notification</string>
 	<string name="preferencesLogTitle">Logging</string>
 	<string name="preferencesLogSummary">Enabling logging</string>
 	<string name="preferencesLogOn">Logging enabled</string>
