@@ -12,7 +12,7 @@ public class WiFiDialogFactory {
 	/**
 	 * Version
 	 */
-	static final public String version = "$Id: WiFiAutoToggleActivity.java 5 2011-09-16 00:09:23Z andappfun $";
+	static final public String version = "$Id$";
 
 	/* About dialog id */
 	public static final int DIALOG_ABOUT = 1;

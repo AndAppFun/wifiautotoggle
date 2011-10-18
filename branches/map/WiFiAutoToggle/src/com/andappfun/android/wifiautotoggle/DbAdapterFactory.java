@@ -7,7 +7,7 @@ public class DbAdapterFactory {
 	/**
 	 * Version
 	 */
-	static final public String version = "$Id: Definitions.java 3 2011-09-03 01:47:39Z andappfun $";
+	static final public String version = "$Id$";
 
     private static final DbAdapterFactory instance = new DbAdapterFactory();
     

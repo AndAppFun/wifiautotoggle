@@ -29,7 +29,7 @@ public class StoredLocationsOverlay extends Overlay {
 	/**
 	 * Version
 	 */
-	static final public String version = "$Id: Definitions.java 3 2011-09-03 01:47:39Z andappfun $";
+	static final public String version = "$Id$";
 
 	/* radius of the whole circle drawn at the Wi-Fi location */
 	static final private int WHOLECIRCLERADIUS = 10;

@@ -21,7 +21,7 @@ public class WiFiMapActivity extends MapActivity {
 	/**
 	 * Version
 	 */
-	static final public String version = "$Id: Definitions.java 3 2011-09-03 01:47:39Z andappfun $";
+	static final public String version = "$Id$";
 
 	private LocationManager locationManager;
 

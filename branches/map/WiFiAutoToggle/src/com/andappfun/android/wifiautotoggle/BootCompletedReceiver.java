@@ -9,7 +9,7 @@ public class BootCompletedReceiver extends BroadcastReceiver {
 	/**
 	 * Version
 	 */
-	static final public String version = "$Id: BootCompletedReceiver.java 12 2011-10-15 23:48:21Z andappfun $";
+	static final public String version = "$Id$";
 
 	@Override
 	public void onReceive(Context context, Intent intent) {

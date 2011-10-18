@@ -28,7 +28,7 @@ public class CurrentLocationOverlay extends MyLocationOverlay {
 	/**
 	 * Version
 	 */
-	static final public String version = "$Id: Definitions.java 3 2011-09-03 01:47:39Z andappfun $";
+	static final public String version = "$Id$";
 
 	// Earth radius length in meters
 	private static final float radius = 6378137;

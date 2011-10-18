@@ -21,7 +21,7 @@ public class WiFiLocationDetailsActivity extends Activity {
 	/**
 	 * Version
 	 */
-	static final public String version = "$Id: ListItemDetailsEdit.java 3 2011-09-03 01:47:39Z andappfun $";
+	static final public String version = "$Id$";
 
 	/* constants for uri matching, see static block for adding uri */
 	private static final int LOCATION_ID = 1;

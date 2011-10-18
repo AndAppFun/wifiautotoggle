@@ -14,7 +14,7 @@ public class ProximityAlertAddService extends IntentService {
 	/**
 	 * Version
 	 */
-	static final public String version = "$Id: ProximityAlertAddService.java 12 2011-10-15 23:48:21Z andappfun $";
+	static final public String version = "$Id$";
 
 	public ProximityAlertAddService() {
 		super("ProximityAlertAddService");

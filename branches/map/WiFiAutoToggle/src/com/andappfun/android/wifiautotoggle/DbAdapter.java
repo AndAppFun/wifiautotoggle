@@ -16,7 +16,7 @@ public class DbAdapter {
 	/**
 	 * Version
 	 */
-	static final public String version = "$Id: Definitions.java 3 2011-09-03 01:47:39Z andappfun $";
+	static final public String version = "$Id$";
 
 	private static final String DATABASE_NAME = "autowifitoggle.db";
 	private static final int DATABASE_VERSION = 2;
