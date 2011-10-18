@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- version = "$Id: menu.xml 3 2011-09-03 01:47:39Z andappfun $"; -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+	<item android:title="@string/mapMenuItemPrefs" android:id="@+id/map_menu_item_prefs" />
+	<item android:title="@string/mapMenuItemAbout" android:id="@+id/map_menu_item_about" />
+</menu>

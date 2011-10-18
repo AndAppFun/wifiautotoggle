@@ -2,14 +2,13 @@ package com.andappfun.android.wifiautotoggle;
 
 import android.app.IntentService;
 import android.app.PendingIntent;
-import android.content.ContentValues;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Bundle;
 
 public class LocationChangedService extends IntentService {
@@ -54,21 +53,18 @@ public class LocationChangedService extends IntentService {
 					}
 
 					/* add location */
-					ContentValues values = new ContentValues();
-					values.put(Definitions.Location.LATITUDE,
-							location.getLatitude());
-					values.put(Definitions.Location.LONGITUDE,
-							location.getLongitude());
-					values.put(Definitions.Location.ACCURACY,
-							location.getAccuracy());
-					Uri uri = this.getContentResolver().insert(
-							Definitions.Location.CONTENT_URI, values);
-
+					
+					DbAdapter dbAdapter = DbAdapterFactory.getInstance().getDbAdapter(this);
+					
+					WiFiLocation wifiLocationToAdd = new WiFiLocation(location.getLatitude(),
+							location.getLongitude(), location.getAccuracy());
+					
+					WiFiLocation wifiLocation = dbAdapter.addLocation(wifiLocationToAdd);
 					/* new location has been added */
-					if (uri != null) {
+					if (wifiLocation != null) {
 						Intent startIntent = new Intent(this,
 								WiFiOnOffService.class);
-						startIntent.setData(uri);
+						startIntent.setData(ContentUris.withAppendedId(Definitions.Location.CONTENT_URI, wifiLocation.getId()));
 						PendingIntent startServiceIntent = PendingIntent
 								.getService(this, 0, startIntent, 0);
 						locationManager.addProximityAlert(
@@ -77,9 +73,9 @@ public class LocationChangedService extends IntentService {
 								Definitions.WIFIRADIUS, -1, startServiceIntent);
 						if (log.isInfoEnabled()) {
 							log.info("LocationChangedServive.onHandleIntent(): proximity alert added latitude: "
-									+ location.getLatitude()
+									+ wifiLocation.getLatitude()
 									+ " longitude: "
-									+ location.getLongitude()
+									+ wifiLocation.getLongitude()
 									+ " intent: "
 									+ startIntent);
 						}

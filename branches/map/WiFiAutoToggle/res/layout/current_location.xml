@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- TODO replace android:apiKey with developer one, currently it holds debug key -->
+<com.google.android.maps.MapView
+	xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/mapview"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:clickable="true" android:apiKey="0RyBX2hwU-A6VpcE4pYjxV-O09vUaXqDJskeRAg" />

@@ -5,6 +5,9 @@
 		android:defaultValue="true" android:title="@string/preferencesEnableTitle"
 		android:summaryOff="@string/preferencesEnableOff" android:summary="@string/preferencesEnableSummary"
 		android:summaryOn="@string/preferencesEnableOn" />
+	<ListPreference android:key="notificationIconKey"
+		android:title="@string/preferencesNotificationIconTitle"
+		android:entryValues="@array/entryValues" android:entries="@array/entries" android:defaultValue="always"/>
 	<CheckBoxPreference android:key="loggingKey"
 		android:defaultValue="false" android:title="@string/preferencesLogTitle"
 		android:summary="@string/preferencesLogSummary" android:summaryOn="@string/preferencesLogOn"

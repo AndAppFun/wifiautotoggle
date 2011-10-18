@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- version = "$Id$"; -->
-<menu
-  xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:title="@string/menuItemPrefs" android:id="@+id/menu_item_prefs"/>
-    <item android:title="@string/menuItemAbout" android:id="@+id/menu_item_about"/>
-</menu>
