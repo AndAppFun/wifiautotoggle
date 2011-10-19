@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- version = "$Id$"; -->
-<menu
-  xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:title="@string/listContextMenuView" android:id="@+id/listContextMenuView"></item>
-    <item android:title="@string/listContextMenuEdit" android:id="@+id/listContextMenuEdit"></item>
-    <item android:title="@string/listContextMenuDelete" android:id="@+id/listContextMenuDelete"></item>
-</menu>

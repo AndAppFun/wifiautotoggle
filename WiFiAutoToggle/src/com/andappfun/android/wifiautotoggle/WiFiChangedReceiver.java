@@ -20,7 +20,7 @@ public class WiFiChangedReceiver extends BroadcastReceiver {
 
 		/* set up log */
 		WiFiLog log = new WiFiLog(context);
-
+		
 		int state = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE,
 				WifiManager.WIFI_STATE_UNKNOWN);
 

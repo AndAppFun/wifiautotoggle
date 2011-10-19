@@ -4,12 +4,10 @@ import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.UriMatcher;
-import android.database.Cursor;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
@@ -59,25 +57,23 @@ public class WiFiOnOffService extends IntentService {
 		if (uri != null) {
 			/* check if the intent has the right data */
 			if (uriMatcher.match(uri) == LOCATION_ID) {
-				ContentResolver cr = getContentResolver();
-				Cursor c = cr.query(uri, null, null, null, null);
-				switch (c.getCount()) {
+				
+				long id = Long.parseLong(uri.getPathSegments().get(1));
 
-				case 1:
+				DbAdapter dbAdapter = DbAdapterFactory.getInstance().getDbAdapter(this);
+
+				WiFiLocation wifiLocation = dbAdapter.getLocation(id);
+
+				if (wifiLocation != null) {
+
 					/* check if the toggle is enabled */
 					SharedPreferences preferences = PreferenceManager
 							.getDefaultSharedPreferences(getApplicationContext());
 					if (preferences.getBoolean("enabledKey", true)) {
-						String name = null;
-						if (c.moveToFirst()) {
-							name = c.getString(c
-									.getColumnIndex(Definitions.Location.NAME));
-						}
-						toggleWifi(intent, name);
+						toggleWifi(intent, wifiLocation);
 					}
-					break;
 
-				case 0:
+				} else {
 					/* no such location in the database, remove proximity alert */
 					Intent startIntent = new Intent(getApplicationContext(),
 							WiFiOnOffService.class);
@@ -92,17 +88,6 @@ public class WiFiOnOffService extends IntentService {
 								+ uri.getPathSegments().get(1)
 								+ " not found, remove proximity alert");
 					}
-
-					break;
-
-				default:
-					/* log an error */
-					if (log.isErrorEnabled()) {
-						log.error("WiFiOnOffService.onHandleIntent():  "
-								+ c.getCount() + " rows found for location: "
-								+ uri);
-					}
-					break;
 				}
 			}
 		}
@@ -115,7 +100,7 @@ public class WiFiOnOffService extends IntentService {
 	 *            location name
 	 * 
 	 */
-	private void toggleWifi(Intent intent, String name) {
+	private void toggleWifi(Intent intent, WiFiLocation wifiLocation) {
 		/* get wi-fi manager */
 		WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
 
@@ -126,12 +111,12 @@ public class WiFiOnOffService extends IntentService {
 				false)) {
 			/* turn Wi-Fi on when entering */
 			if (wifiManager.setWifiEnabled(true)) {
-				notifyEnabled(intent, bWiFiEnabled, name);
+				notifyEnabled(intent, bWiFiEnabled, wifiLocation);
 			}
 		} else {
 			/* turn Wi-Fi off when leaving */
 			if (wifiManager.setWifiEnabled(false)) {
-				notifyDisabled(intent, bWiFiEnabled, name);
+				notifyDisabled(intent, bWiFiEnabled, wifiLocation);
 			}
 		}
 	}
@@ -145,7 +130,7 @@ public class WiFiOnOffService extends IntentService {
 	 *            location name
 	 */
 	private void notifyEnabled(Intent intent, boolean bWiFiAlreadyEnabled,
-			String name) {
+			WiFiLocation wifiLocation) {
 
 		SharedPreferences preferences = PreferenceManager
 				.getDefaultSharedPreferences(getApplicationContext());
@@ -158,16 +143,16 @@ public class WiFiOnOffService extends IntentService {
 
 			/* create notification text including location name */
 			StringBuffer b = new StringBuffer();
-			if (name != null) {
+			if (wifiLocation.getName() != null) {
 				b.append(getString(R.string.serviceEntering));
 				b.append(" ");
-				b.append(name);
+				b.append(wifiLocation.getName());
 			}
 
 			Notification notification = new Notification(R.drawable.wifion,
 					b.toString(), System.currentTimeMillis());
 			Intent notificationIntent = new Intent(this,
-					WiFiAutoToggleActivity.class);
+					WiFiMapActivity.class);
 			PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
 					notificationIntent, 0);
 
@@ -200,7 +185,7 @@ public class WiFiOnOffService extends IntentService {
 	 *            location name
 	 */
 	private void notifyDisabled(Intent intent, boolean bWiFiAlreadyEnabled,
-			String name) {
+			WiFiLocation wifiLocation) {
 
 		SharedPreferences preferences = PreferenceManager
 				.getDefaultSharedPreferences(getApplicationContext());
@@ -213,16 +198,16 @@ public class WiFiOnOffService extends IntentService {
 
 			/* create notification text including location name */
 			StringBuffer b = new StringBuffer();
-			if (name != null) {
+			if (wifiLocation.getName() != null) {
 				b.append(getString(R.string.serviceLeaving));
 				b.append(" ");
-				b.append(name);
+				b.append(wifiLocation.getName());
 			}
 
 			Notification notification = new Notification(R.drawable.wifioff,
 					b.toString(), System.currentTimeMillis());
 			Intent notificationIntent = new Intent(this,
-					WiFiAutoToggleActivity.class);
+					WiFiMapActivity.class);
 			PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
 					notificationIntent, 0);
 

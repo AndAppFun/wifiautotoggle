@@ -1,55 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- version = "$Id$"; -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	android:installLocation="internalOnly" package="com.andappfun.android.wifiautotoggle" android:versionCode="5" android:versionName="1.2.0">
+	package="com.andappfun.android.wifiautotoggle" android:versionName="2.0"
+	android:versionCode="6" android:installLocation="internalOnly">
 
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 	<uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-	
+
 	<uses-sdk android:targetSdkVersion="8" android:minSdkVersion="8" />
 
 	<application android:icon="@drawable/icon" android:label="@string/appName">
-		<activity android:name=".WiFiAutoToggleActivity" android:label="@string/appName">
+
+		<uses-library android:name="com.google.android.maps" />
+
+		<activity android:label="@string/appName" android:name="WiFiMapActivity"
+			android:theme="@android:style/Theme.NoTitleBar">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
 
+		<activity android:name="WiFiLocationDetailsActivity" />
+
 		<activity android:name="Preferences" android:label="@string/prefsName">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 			</intent-filter>
 		</activity>
-		
-		<activity android:name="ListItemDetailsView"/>
-				
-		<activity android:name="com.andappfun.android.wifiautotoggle.ListItemDetailsEdit"/>
 
 		<service android:name="WiFiOnOffService" android:exported="true" />
 
-		<service android:name="com.andappfun.android.wifiautotoggle.LocationChangedService" android:exported="true" />
-		
-		<service android:name=".ProximityAlertAddService" android:exported="true" />
+		<service android:name="LocationChangedService"
+			android:exported="true" />
 
-		<receiver android:exported="true" android:name="com.andappfun.android.wifiautotoggle.WiFiChangedReceiver">
+		<service android:name="ProximityAlertAddService"
+			android:exported="true" />
+
+		<receiver android:exported="true" android:name="WiFiChangedReceiver">
 			<intent-filter>
 				<action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
 			</intent-filter>
 		</receiver>
-		
+
 		<receiver android:exported="true" android:name="BootCompletedReceiver">
 			<intent-filter>
 				<action android:name="android.intent.action.BOOT_COMPLETED" />
 			</intent-filter>
 		</receiver>
-		
-		<provider android:authorities="com.andappfun.android.wifiautotoggle.wifilocationprovider"
-			android:name="com.andappfun.android.wifiautotoggle.WiFiLocationProvider" />
 
 	</application>
 </manifest>

@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- version = "$Id$"; -->
 <resources>
-	<string name="dialogAboutTitle">About</string>
-	<string name="dialogAboutVersion">Version: </string>
 
 	<string name="appName">Wi-Fi Auto Toggle</string>
-	<string name="listEmpty">No locations stored</string>
+
+	<string name="currentLocationWiFiDisabling">Disabling Wi-Fi</string>
+	<string name="currentLocationWiFiEnabling">Enabling Wi-Fi</string>
+
+	<string name="dialogAboutTitle">About</string>
+	<string name="dialogAboutVersion">Version: </string>
 
 	<string name="preferencesEnableTitle">Wi-Fi Auto Toggle</string>
 	<string name="preferencesEnableSummary">Enabling Wi-Fi auto toggle</string>
@@ -21,6 +24,9 @@
 	<string name="menuItemAbout">About</string>
 	<string name="menuItemPrefs">Preferences</string>
 
+	<string name="mapMenuItemAbout">About</string>
+	<string name="mapMenuItemPrefs">Preferences</string>
+
 	<string name="prefsName">Preferences</string>
 
 	<string name="serviceWiFiDisabled">Wi-Fi disabled</string>
@@ -30,41 +36,20 @@
 	<string name="serviceLeaving">Leaving</string>
 	<string name="serviceEntering">At</string>
 
-	<string name="autowifiButtonLabel">Wi-Fi</string>
-	<string name="autowifiCurrentLocation">Current location</string>
-	<string name="autowifiLatitude">Latitude</string>
-	<string name="autowifiLongitude">Longitude</string>
-	<string name="autowifiAccuracy">Accuracy</string>
-	<string name="autowifiLocations">Locations</string>
-	
 	<string name="noProviderMessage">Can not determine current location.\nPress OK to display location and security settings.</string>
 	<string name="noProviderOKButton">OK</string>
 	<string name="noProviderCancelButton">Cancel</string>
 
-	<string name="listItemDetailsEditHeader">Edit location</string>
-	<string name="listItemDetailsEditLocation">Location</string>
-	<string name="listItemDetailsEditAdded">Added</string>
-	<string name="listItemDetailsEditLatitude">Latitude</string>
-	<string name="listItemDetailsEditLongitude">Longitude</string>
-	<string name="listItemDetailsEditAccuracy">Accuracy</string>
-	<string name="listItemsDetailsEditDone">Done</string>
-	<string name="listItemsDetailsEditCancel">Cancel</string>
-	<string name="listItemsDetailsEditDataSaved">Data has been saved</string>
-
-	<string name="listItemDetailsViewLocation">Location</string>
-	<string name="listItemDetailsViewAdded">Added</string>
-	<string name="listItemDetailsViewLatitude">Latitude</string>
-	<string name="listItemDetailsViewLongitude">Longitude</string>
-	<string name="listItemDetailsViewAccuracy">Accuracy</string>
-
-	<string name="listContextMenuTitle">Options</string>
-	<string name="listContextMenuView">View</string>
-	<string name="listContextMenuEdit">Edit</string>
-	<string name="listContextMenuDelete">Delete</string>
-	
-	<string name="wifiDeleteLocationQuestion">Delete this location?</string>
-	<string name="wifiDeleteYes">Yes</string>
-	<string name="wifiDeleteNo">No</string>
-	<string name="wifiDeleteDeleted">Location has been deleted</string>
+	<string name="wifiLocationDetailsEditHeader">Edit location</string>
+	<string name="wifiLocationDetailsEditLocation">Location</string>
+	<string name="wifiLocationDetailsEditAdded">Added</string>
+	<string name="wifiLocationDetailsEditLatitude">Latitude</string>
+	<string name="wifiLocationDetailsEditLongitude">Longitude</string>
+	<string name="wifiLocationDetailsEditAccuracy">Accuracy</string>
+	<string name="wifiLocationDetailsEditSave">Save</string>
+	<string name="wifiLocationDetailsEditDelete">Delete</string>
+	<string name="wifiLocationDetailsEditCancel">Cancel</string>
+	<string name="wifiLocationDetailsEditDataSaved">Data has been saved</string>
+	<string name="wifiLocationDetailsEditDataDeleted">Location has been deleted</string>
 
 </resources>

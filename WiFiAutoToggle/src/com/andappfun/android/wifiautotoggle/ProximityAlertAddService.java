@@ -29,8 +29,9 @@ public class ProximityAlertAddService extends IntentService {
 		LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
 		/* add proximity alerts to all locations */
-		Cursor c = getContentResolver().query(Definitions.Location.CONTENT_URI,
-				null, null, null, null);
+		DbAdapter dbAdapter = DbAdapterFactory.getInstance().getDbAdapter(this);
+		
+		Cursor c = dbAdapter.getAllLocations();
 		if (c.moveToFirst()) {
 			int latitudeColumn = c
 					.getColumnIndex(Definitions.Location.LATITUDE);
