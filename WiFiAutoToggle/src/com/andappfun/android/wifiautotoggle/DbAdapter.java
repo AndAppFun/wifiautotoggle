@@ -1,6 +1,7 @@
 package com.andappfun.android.wifiautotoggle;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import android.content.ContentValues;
@@ -113,11 +114,18 @@ public class DbAdapter {
 		WiFiLocation l = null;
 		long id = -1;
 
+		if (log.isDebugEnabled()) {
+			log.debug("DbAdapter.addLocation(): latitude: "
+					+ wifiLocationToAdd.getLatitude() + " longitude: "
+					+ wifiLocationToAdd.getLongitude());
+		}
+
 		/* check if equivalent location exists */
 		double latitudeFrom = WiFiLocation.normalizeLatitude(wifiLocationToAdd
 				.getLatitude() - WiFiLocation.LATITUDERANGE);
 		double longitudeFrom = WiFiLocation
-				.normalizeLongitude(wifiLocationToAdd.getLongitude() - WiFiLocation.LONGITUDERANGE);
+				.normalizeLongitude(wifiLocationToAdd.getLongitude()
+						- WiFiLocation.LONGITUDERANGE);
 
 		double latitudeTo = WiFiLocation.normalizeLatitude(wifiLocationToAdd
 				.getLatitude() + WiFiLocation.LATITUDERANGE);
@@ -127,8 +135,9 @@ public class DbAdapter {
 		List<WiFiLocation> locations = getLocationsFromArea(latitudeFrom,
 				longitudeFrom, latitudeTo, longitudeTo);
 
-		while (locations.iterator().hasNext() && id == -1) {
-			WiFiLocation wifiLocation = locations.iterator().next();
+		Iterator<WiFiLocation> wifiLocationsIterator = locations.iterator();
+		while (wifiLocationsIterator.hasNext() && id == -1) {
+			WiFiLocation wifiLocation = wifiLocationsIterator.next();
 			if (wifiLocationToAdd.isEquivalent(wifiLocation,
 					Definitions.WIFIRADIUS)) {
 				id = wifiLocation.getId();
@@ -200,6 +209,12 @@ public class DbAdapter {
 					log.error("DbAdapter.addLocation(): failed to insert row");
 				}
 			}
+		} else {
+			if (log.isDebugEnabled()) {
+				log.debug("DbAdapter.addLocation(): new location not added, location: "
+						+ id + " found");
+			}
+
 		}
 		return l;
 	}
@@ -272,11 +287,14 @@ public class DbAdapter {
 		if (locationsFromAreaList == null) {
 
 			locationsFromAreaList = new ArrayList<WiFiLocation>();
-			
-			/* since latitude is capped on 90 and -90 degrees latitude from should always be smaller than latitude to*/
+
+			/*
+			 * since latitude is capped on 90 and -90 degrees latitude from
+			 * should always be smaller than latitude to
+			 */
 			String latitudeWhere = Definitions.Location.LATITUDE + " >= "
-						+ latitudeFrom + " AND "
-						+ Definitions.Location.LATITUDE + " <= " + latitudeTo;
+					+ latitudeFrom + " AND " + Definitions.Location.LATITUDE
+					+ " <= " + latitudeTo;
 
 			String longitudeWhere;
 			if (longitudeFrom <= longitudeTo) {
@@ -302,10 +320,10 @@ public class DbAdapter {
 					+ Definitions.Location.TABLE_NAME + " WHERE "
 					+ longitudeWhere + ");";
 
-			//if (log.isDebugEnabled()) {
-			//	log.debug("DbAdapter.getLocationsFromArea(): query: "
-			//			+ sqlQuery);
-			//}
+			// if (log.isDebugEnabled()) {
+			// log.debug("DbAdapter.getLocationsFromArea(): query: "
+			// + sqlQuery);
+			// }
 
 			Cursor c = getDatabase().rawQuery(sqlQuery, null);
 			if (c.moveToFirst()) {
@@ -324,13 +342,13 @@ public class DbAdapter {
 					location.setCreatedDateTime(c.getLong(c
 							.getColumnIndex(Definitions.Location.CREATED_DATE)));
 					locationsFromAreaList.add(location);
-					//if (log.isDebugEnabled()) {
-					//	log.debug("DbAdapter.getLocationsFromArea(): location "
-					//			+ location.getId() + " ("
-					//			+ location.getLatitude() + ", "
-					//			+ location.getLongitude()
-					//			+ ") added to the list");
-					//}
+					// if (log.isDebugEnabled()) {
+					// log.debug("DbAdapter.getLocationsFromArea(): location "
+					// + location.getId() + " ("
+					// + location.getLatitude() + ", "
+					// + location.getLongitude()
+					// + ") added to the list");
+					// }
 				} while (c.moveToNext());
 			}
 			c.close();
