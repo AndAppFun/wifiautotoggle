@@ -110,7 +110,7 @@ public class DbAdapter {
 	 *            location to be added
 	 * @return newly added location or null when such location already exists
 	 */
-	public WiFiLocation addLocation(WiFiLocation wifiLocationToAdd) {
+	public synchronized WiFiLocation addLocation(WiFiLocation wifiLocationToAdd) {
 		WiFiLocation l = null;
 		long id = -1;
 
@@ -224,7 +224,7 @@ public class DbAdapter {
 	 * 
 	 * @return Cursor
 	 */
-	public Cursor getAllLocations() {
+	public synchronized Cursor getAllLocations() {
 		return getDatabase().query(
 				Definitions.Location.TABLE_NAME,
 				new String[] { Definitions.Location._ID,
@@ -273,7 +273,7 @@ public class DbAdapter {
 	 * @param longitudeTo
 	 * @return list of locations
 	 */
-	public List<WiFiLocation> getLocationsFromArea(double latitudeFrom,
+	public synchronized List<WiFiLocation> getLocationsFromArea(double latitudeFrom,
 			double longitudeFrom, double latitudeTo, double longitudeTo) {
 
 		if (areaChanged(latitudeFrom, longitudeFrom, latitudeTo, longitudeTo)) {
@@ -365,7 +365,7 @@ public class DbAdapter {
 	 * @return number of rows that have been deleted, 1 indicates that location
 	 *         has been deleted
 	 */
-	public int deleteLocation(long id) {
+	public synchronized int deleteLocation(long id) {
 		int nRows = getDatabase().delete(Definitions.Location.TABLE_NAME,
 				Definitions.Location._ID + "=?",
 				new String[] { Long.toString(id) });
@@ -382,7 +382,7 @@ public class DbAdapter {
 	 *            location id
 	 * @return WiFiLocation Wi-Fi location for the given id
 	 */
-	public WiFiLocation getLocation(long id) {
+	public synchronized WiFiLocation getLocation(long id) {
 		WiFiLocation location = null;
 
 		Cursor c = getDatabase().query(
@@ -419,7 +419,7 @@ public class DbAdapter {
 	 *            Wi-Fi location to be updated
 	 * @return number of rows affected. One indicates successful update.
 	 */
-	public int updateLocation(WiFiLocation location) {
+	public synchronized int updateLocation(WiFiLocation location) {
 		ContentValues values = new ContentValues();
 		values.put(Definitions.Location.NAME, location.getName());
 
