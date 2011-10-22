@@ -273,8 +273,9 @@ public class DbAdapter {
 	 * @param longitudeTo
 	 * @return list of locations
 	 */
-	public synchronized List<WiFiLocation> getLocationsFromArea(double latitudeFrom,
-			double longitudeFrom, double latitudeTo, double longitudeTo) {
+	public synchronized List<WiFiLocation> getLocationsFromArea(
+			double latitudeFrom, double longitudeFrom, double latitudeTo,
+			double longitudeTo) {
 
 		if (areaChanged(latitudeFrom, longitudeFrom, latitudeTo, longitudeTo)) {
 			this.latitudeFrom = latitudeFrom;
@@ -288,44 +289,53 @@ public class DbAdapter {
 
 			locationsFromAreaList = new ArrayList<WiFiLocation>();
 
+			String sqlQuery;
+
 			/*
 			 * since latitude is capped on 90 and -90 degrees latitude from
 			 * should always be smaller than latitude to
 			 */
-			String latitudeWhere = Definitions.Location.LATITUDE + " >= "
-					+ latitudeFrom + " AND " + Definitions.Location.LATITUDE
-					+ " <= " + latitudeTo;
-
-			String longitudeWhere;
 			if (longitudeFrom <= longitudeTo) {
-				longitudeWhere = Definitions.Location.LONGITUDE + " >= "
-						+ longitudeFrom + " AND "
-						+ Definitions.Location.LONGITUDE + " <= " + longitudeTo;
-			} else {
-				longitudeWhere = "( " + Definitions.Location.LONGITUDE + " >= "
-						+ longitudeFrom + " AND "
-						+ Definitions.Location.LONGITUDE + " <= 180.0 ) OR ("
-						+ Definitions.Location.LONGITUDE + " <= " + longitudeTo
-						+ " AND " + Definitions.Location.LONGITUDE
-						+ " >= -180.0 )";
-			}
+				sqlQuery = "SELECT * FROM " + Definitions.Location.TABLE_NAME
+						+ " WHERE " + Definitions.Location._ID
+						+ " IN ( SELECT " + Definitions.Location._ID + " FROM "
+						+ Definitions.Location.TABLE_NAME + " WHERE "
+						+ Definitions.Location.LATITUDE + " >= ? AND "
+						+ Definitions.Location.LATITUDE
+						+ " <= ? INTERSECT SELECT " + Definitions.Location._ID
+						+ " FROM " + Definitions.Location.TABLE_NAME
+						+ " WHERE " + Definitions.Location.LONGITUDE
+						+ " >= ? AND " + Definitions.Location.LONGITUDE
+						+ " <= ? );";
 
-			String sqlQuery = "SELECT * FROM "
-					+ Definitions.Location.TABLE_NAME + " WHERE "
-					+ Definitions.Location._ID + " IN ( SELECT "
-					+ Definitions.Location._ID + " FROM "
-					+ Definitions.Location.TABLE_NAME + " WHERE "
-					+ latitudeWhere + " INTERSECT SELECT "
-					+ Definitions.Location._ID + " FROM "
-					+ Definitions.Location.TABLE_NAME + " WHERE "
-					+ longitudeWhere + ");";
+			} else {
+				sqlQuery = "SELECT * FROM " + Definitions.Location.TABLE_NAME
+						+ " WHERE " + Definitions.Location._ID
+						+ " IN ( SELECT " + Definitions.Location._ID + " FROM "
+						+ Definitions.Location.TABLE_NAME + " WHERE "
+						+ Definitions.Location.LATITUDE + " >= ? AND "
+						+ Definitions.Location.LATITUDE
+						+ " <= ? INTERSECT SELECT " + Definitions.Location._ID
+						+ " FROM " + Definitions.Location.TABLE_NAME
+						+ " WHERE ( " + Definitions.Location.LONGITUDE
+						+ " >= ?  AND " + Definitions.Location.LONGITUDE
+						+ " <= 180.0 ) OR (" + Definitions.Location.LONGITUDE
+						+ " <= ? " + " AND " + Definitions.Location.LONGITUDE
+						+ " >= -180.0 ));";
+			}
 
 			// if (log.isDebugEnabled()) {
 			// log.debug("DbAdapter.getLocationsFromArea(): query: "
 			// + sqlQuery);
 			// }
 
-			Cursor c = getDatabase().rawQuery(sqlQuery, null);
+			Cursor c = getDatabase().rawQuery(
+					sqlQuery,
+					new String[] { Double.toString(latitudeFrom),
+							Double.toString(latitudeTo),
+							Double.toString(longitudeFrom),
+							Double.toString(longitudeTo) });
+
 			if (c.moveToFirst()) {
 				do {
 					WiFiLocation location = new WiFiLocation(
