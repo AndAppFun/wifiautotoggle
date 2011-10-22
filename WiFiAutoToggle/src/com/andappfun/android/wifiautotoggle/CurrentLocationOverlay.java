@@ -38,7 +38,7 @@ public class CurrentLocationOverlay extends MyLocationOverlay {
 
 	/* stroke width */
 	private static final float STROKEWIDTH = 5;
-	
+
 	Context context;
 
 	WiFiLog log;
@@ -62,9 +62,9 @@ public class CurrentLocationOverlay extends MyLocationOverlay {
 
 	public CurrentLocationOverlay(OverlaySwitcher switcher, Context context,
 			MapView mapView) {
-		
+
 		super(context, mapView);
-		
+
 		this.context = context;
 
 		log = new WiFiLog(context);
@@ -151,38 +151,40 @@ public class CurrentLocationOverlay extends MyLocationOverlay {
 
 			/* toggle Wi-Fi when pressed within current location */
 			Location currentLocation = getLastFix();
-			float results[] = new float[3];
-			Location.distanceBetween(currentLocation.getLatitude(),
-					currentLocation.getLongitude(),
-					geoPoint.getLatitudeE6() / 1E6,
-					geoPoint.getLongitudeE6() / 1E6, results);
-			if (results[0] <= currentLocation.getAccuracy()) {
-				/* toggle Wi-Fi */
-				boolean wasEnabled = wifiManager.isWifiEnabled();
-				
-				if (log.isInfoEnabled()) {
-					log.info("CurrentLocationOverlay.onTap(): set WiFi enabled to: " + !wasEnabled);
-				}
-				
-				wifiManager.setWifiEnabled(!wasEnabled);
-				
-				/* refresh */
-				mapView.invalidate();
-				
-				/* display a toast */
-				int stringId;
-				if (wasEnabled) {
-					stringId = R.string.currentLocationWiFiDisabling;
+			if (currentLocation != null) {
+				float results[] = new float[3];
+				Location.distanceBetween(currentLocation.getLatitude(),
+						currentLocation.getLongitude(),
+						geoPoint.getLatitudeE6() / 1E6,
+						geoPoint.getLongitudeE6() / 1E6, results);
+				if (results[0] <= currentLocation.getAccuracy()) {
+					/* toggle Wi-Fi */
+					boolean wasEnabled = wifiManager.isWifiEnabled();
+
+					if (log.isInfoEnabled()) {
+						log.info("CurrentLocationOverlay.onTap(): set WiFi enabled to: "
+								+ !wasEnabled);
+					}
+
+					wifiManager.setWifiEnabled(!wasEnabled);
+
+					/* refresh */
+					mapView.invalidate();
+
+					/* display a toast */
+					int stringId;
+					if (wasEnabled) {
+						stringId = R.string.currentLocationWiFiDisabling;
+					} else {
+						stringId = R.string.currentLocationWiFiEnabling;
+					}
+					Toast toast = Toast.makeText(context, stringId,
+							Toast.LENGTH_SHORT);
+					toast.show();
 				} else {
-					stringId = R.string.currentLocationWiFiEnabling;
+					/* switch overlays when pressed outside current location */
+					switcher.next();
 				}
-				Toast toast = Toast.makeText(context,
-						stringId,
-						Toast.LENGTH_SHORT);
-				toast.show();				
-			} else {
-				/* switch overlays when pressed outside current location */
-				switcher.next();
 			}
 		}
 		return handled;
