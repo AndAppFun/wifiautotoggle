@@ -179,7 +179,7 @@ public class CurrentLocationOverlay extends MyLocationOverlay {
 						stringId = R.string.currentLocationWiFiEnabling;
 					}
 					Toast toast = Toast.makeText(context, stringId,
-							Toast.LENGTH_SHORT);
+							Toast.LENGTH_LONG);
 					toast.show();
 				} else {
 					/* switch overlays when pressed outside current location */
