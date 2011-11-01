@@ -39,9 +39,9 @@ public class CurrentLocationOverlay extends MyLocationOverlay {
 	/* stroke width */
 	private static final float STROKEWIDTH = 5;
 
-	Context context;
+	private Context context;
 
-	WiFiLog log;
+	private WiFiLog log;
 
 	private OverlaySwitcher switcher;
 
@@ -72,7 +72,7 @@ public class CurrentLocationOverlay extends MyLocationOverlay {
 		this.switcher = switcher;
 
 		this.mapView = mapView;
-
+		
 		/* get Wi-Fi manager */
 		wifiManager = (WifiManager) context
 				.getSystemService(WiFiOnOffService.WIFI_SERVICE);
@@ -159,21 +159,31 @@ public class CurrentLocationOverlay extends MyLocationOverlay {
 						geoPoint.getLongitudeE6() / 1E6, results);
 				if (results[0] <= currentLocation.getAccuracy()) {
 					/* toggle Wi-Fi */
-					boolean wasEnabled = wifiManager.isWifiEnabled();
+					boolean bWiFiEnabled = wifiManager.isWifiEnabled();
 
 					if (log.isInfoEnabled()) {
 						log.info("CurrentLocationOverlay.onTap(): set WiFi enabled to: "
-								+ !wasEnabled);
+								+ !bWiFiEnabled);
 					}
 
-					wifiManager.setWifiEnabled(!wasEnabled);
+					if (bWiFiEnabled) {
+						/* turn off Wi-Fi */
+						if (wifiManager.getWifiState() != WifiManager.WIFI_STATE_DISABLING) {
+							wifiManager.setWifiEnabled(false);
+						}
+					} else {
+						/* turn on Wi-Fi */
+						if (wifiManager.getWifiState() != WifiManager.WIFI_STATE_ENABLING) {
+							wifiManager.setWifiEnabled(true);
+						}
+					}
 
 					/* refresh */
 					mapView.invalidate();
 
 					/* display a toast */
 					int stringId;
-					if (wasEnabled) {
+					if (bWiFiEnabled) {
 						stringId = R.string.currentLocationWiFiDisabling;
 					} else {
 						stringId = R.string.currentLocationWiFiEnabling;

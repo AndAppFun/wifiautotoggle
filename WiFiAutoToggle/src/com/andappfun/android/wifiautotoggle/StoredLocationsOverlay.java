@@ -96,6 +96,8 @@ public class StoredLocationsOverlay extends Overlay {
 		/* respond only when active */
 		if (switcher.isActive(this)) {
 
+			handled = true;
+
 			Projection projection = mapView.getProjection();
 
 			Point point = new Point();
@@ -141,7 +143,6 @@ public class StoredLocationsOverlay extends Overlay {
 					log.debug("StoredLocationsOverlay.onTap: location: "
 							+ wifiLocation.getId());
 				}
-				handled = true;
 				Intent launchWiFiLocationDetails = new Intent(context,
 						WiFiLocationDetailsActivity.class);
 				Uri uri = ContentUris.withAppendedId(

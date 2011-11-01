@@ -40,12 +40,12 @@ public class WiFiOnOffService extends IntentService {
 
 	public WiFiOnOffService() {
 		super("WiFiOnOffService");
-
-		log = new WiFiLog(this);
 	}
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
+		
+		log = new WiFiLog(getApplicationContext());
 
 		if (log.isDebugEnabled()) {
 			log.debug("WiFiOnOffService.onHandleIntent(): " + intent);
@@ -57,18 +57,20 @@ public class WiFiOnOffService extends IntentService {
 		if (uri != null) {
 			/* check if the intent has the right data */
 			if (uriMatcher.match(uri) == LOCATION_ID) {
-				
+
 				long id = Long.parseLong(uri.getPathSegments().get(1));
 
-				DbAdapter dbAdapter = DbAdapterFactory.getInstance().getDbAdapter(this);
+				DbAdapter dbAdapter = DbAdapterFactory.getInstance()
+						.getDbAdapter(this);
 
 				WiFiLocation wifiLocation = dbAdapter.getLocation(id);
 
 				if (wifiLocation != null) {
-
-					/* check if the toggle is enabled */
+					
 					SharedPreferences preferences = PreferenceManager
 							.getDefaultSharedPreferences(getApplicationContext());
+
+					/* check if the toggle is enabled */
 					if (preferences.getBoolean("enabledKey", true)) {
 						toggleWifi(intent, wifiLocation);
 					}
@@ -107,15 +109,38 @@ public class WiFiOnOffService extends IntentService {
 		/* current Wi-Fi state */
 		boolean bWiFiEnabled = wifiManager.isWifiEnabled();
 
+		/* is user to be notified (depending on preferences) */
+		boolean bNotify = false;
+
 		if (intent.getBooleanExtra(LocationManager.KEY_PROXIMITY_ENTERING,
 				false)) {
 			/* turn Wi-Fi on when entering */
-			if (wifiManager.setWifiEnabled(true)) {
+			if (bWiFiEnabled
+					|| wifiManager.getWifiState() == WifiManager.WIFI_STATE_ENABLING) {
+				/* only notify when Wi-Fi is enabled or is being enabled */
+				bNotify = true;
+			} else {
+				/* turn on Wi-Fi and notify is turning on was successful */
+				if (wifiManager.setWifiEnabled(true)) {
+					bNotify = true;
+				}
+			}
+			if (bNotify) {
 				notifyEnabled(intent, bWiFiEnabled, wifiLocation);
 			}
 		} else {
 			/* turn Wi-Fi off when leaving */
-			if (wifiManager.setWifiEnabled(false)) {
+			if (!bWiFiEnabled
+					|| wifiManager.getWifiState() == WifiManager.WIFI_STATE_DISABLING) {
+				/* only notify when Wi-Fi is disabled or is being disabled */
+				bNotify = true;
+			} else {
+				/* turn off Wi-Fi and notify is turning off was successful */
+				if (wifiManager.setWifiEnabled(false)) {
+					bNotify = true;
+				}
+			}
+			if (bNotify) {
 				notifyDisabled(intent, bWiFiEnabled, wifiLocation);
 			}
 		}
@@ -151,8 +176,7 @@ public class WiFiOnOffService extends IntentService {
 
 			Notification notification = new Notification(R.drawable.wifion,
 					b.toString(), System.currentTimeMillis());
-			Intent notificationIntent = new Intent(this,
-					WiFiMapActivity.class);
+			Intent notificationIntent = new Intent(this, WiFiMapActivity.class);
 			PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
 					notificationIntent, 0);
 
@@ -206,8 +230,7 @@ public class WiFiOnOffService extends IntentService {
 
 			Notification notification = new Notification(R.drawable.wifioff,
 					b.toString(), System.currentTimeMillis());
-			Intent notificationIntent = new Intent(this,
-					WiFiMapActivity.class);
+			Intent notificationIntent = new Intent(this, WiFiMapActivity.class);
 			PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
 					notificationIntent, 0);
 

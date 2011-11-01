@@ -48,13 +48,13 @@ public class WiFiMapActivity extends MapActivity {
 
 		OverlaySwitcher switcher = new OverlaySwitcher();
 
-		storedLocationsOverlay = new StoredLocationsOverlay(switcher, this);
-		switcher.addOverlay(storedLocationsOverlay);
-		mapView.getOverlays().add(storedLocationsOverlay);
-
 		myLocationOverlay = new CurrentLocationOverlay(switcher, this, mapView);
 		switcher.addOverlay(myLocationOverlay);
 		mapView.getOverlays().add(myLocationOverlay);
+
+		storedLocationsOverlay = new StoredLocationsOverlay(switcher, this);
+		switcher.addOverlay(storedLocationsOverlay);
+		mapView.getOverlays().add(storedLocationsOverlay);
 
 		/* start service to add proximity alerts to all locations */
 		Intent startServiceIntent = new Intent(this,

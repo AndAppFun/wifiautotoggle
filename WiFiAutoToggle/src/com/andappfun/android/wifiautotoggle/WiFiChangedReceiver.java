@@ -20,73 +20,82 @@ public class WiFiChangedReceiver extends BroadcastReceiver {
 
 		/* set up log */
 		WiFiLog log = new WiFiLog(context);
-		
-		int state = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE,
-				WifiManager.WIFI_STATE_UNKNOWN);
 
-		switch (state) {
-		case WifiManager.WIFI_STATE_ENABLED: {
-			LocationManager locationManager = (LocationManager) context
-					.getSystemService(Context.LOCATION_SERVICE);
+		if (log.isDebugEnabled()) {
+			log.debug("WiFiChangedReceiver.onReceive(): " + intent);
+		}
 
-			/* define criteria */
-			Criteria criteria = new Criteria();
-			criteria.setAltitudeRequired(false);
-			criteria.setBearingRequired(false);
-			criteria.setSpeedRequired(false);
-			criteria.setCostAllowed(false);
-			criteria.setPowerRequirement(Criteria.POWER_LOW);
-			criteria.setAccuracy(Criteria.ACCURACY_FINE);
+		if (intent.getAction().compareTo("android.net.wifi.WIFI_STATE_CHANGED") == 0) {
 
-			/* get best provider */
-			String provider = locationManager.getBestProvider(criteria, true);
+			int state = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE,
+					WifiManager.WIFI_STATE_UNKNOWN);
 
-			if (provider != null) {
+			switch (state) {
+			case WifiManager.WIFI_STATE_ENABLED: {
+
+				LocationManager locationManager = (LocationManager) context
+						.getSystemService(Context.LOCATION_SERVICE);
+
+				/* define criteria */
+				Criteria criteria = new Criteria();
+				criteria.setAltitudeRequired(false);
+				criteria.setBearingRequired(false);
+				criteria.setSpeedRequired(false);
+				criteria.setCostAllowed(false);
+				criteria.setPowerRequirement(Criteria.POWER_LOW);
+				criteria.setAccuracy(Criteria.ACCURACY_FINE);
+
+				/* get best provider */
+				String provider = locationManager.getBestProvider(criteria,
+						true);
+
+				if (provider != null) {
+
+					Intent startIntent = new Intent(context,
+							LocationChangedService.class);
+					PendingIntent pendingIntent = PendingIntent.getService(
+							context, 0, startIntent, 0);
+
+					/* request location updates */
+					locationManager.requestLocationUpdates(provider, 0, 0,
+							pendingIntent);
+					if (log.isInfoEnabled()) {
+						log.info("WiFiChangedReceiver.onReceive(): WiFi enabled - requesting location updates from "
+								+ provider + " provider");
+					}
+					/*
+					 * location updates request will be removed from the service
+					 * once needed location has been obtained
+					 */
+				} else {
+					if (log.isErrorEnabled()) {
+						log.error("WiFiChangedReceiver.onReceive(): unable to obtain location provider, location updates not requested");
+					}
+				}
+
+			}
+				break;
+
+			case WifiManager.WIFI_STATE_DISABLED: {
+				LocationManager locationManager = (LocationManager) context
+						.getSystemService(Context.LOCATION_SERVICE);
 
 				Intent startIntent = new Intent(context,
 						LocationChangedService.class);
 				PendingIntent pendingIntent = PendingIntent.getService(context,
 						0, startIntent, 0);
 
-				/* request location updates */
-				locationManager.requestLocationUpdates(provider, 0, 0,
-						pendingIntent);
+				/* remove location updates request */
+				locationManager.removeUpdates(pendingIntent);
 				if (log.isInfoEnabled()) {
-					log.info("WiFiChangedReceiver.onReceive(): WiFi enabled - requesting location updates from "
-							+ provider + " provider");
-				}
-				/*
-				 * location updates request will be removed from the service
-				 * once needed location has been obtained
-				 */
-			} else {
-				if (log.isErrorEnabled()) {
-					log.error("WiFiChangedReceiver.onReceive(): unable to obtain location provider, location updates not requested");
+					log.info("WiFiChangedReceiver.onReceive(): WiFi disabled - remove location updates");
 				}
 			}
+				break;
 
-		}
-			break;
-
-		case WifiManager.WIFI_STATE_DISABLED: {
-			LocationManager locationManager = (LocationManager) context
-					.getSystemService(Context.LOCATION_SERVICE);
-
-			Intent startIntent = new Intent(context,
-					LocationChangedService.class);
-			PendingIntent pendingIntent = PendingIntent.getService(context, 0,
-					startIntent, 0);
-
-			/* remove location updates request */
-			locationManager.removeUpdates(pendingIntent);
-			if (log.isInfoEnabled()) {
-				log.info("WiFiChangedReceiver.onReceive(): WiFi disabled - remove location updates");
+			default:
+				break;
 			}
-		}
-			break;
-
-		default:
-			break;
 		}
 	}
 }
