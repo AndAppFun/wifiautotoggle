@@ -39,6 +39,7 @@
 	<string name="noProviderMessage">Can not determine current location.\nPress OK to display location and security settings.</string>
 	<string name="noProviderOKButton">OK</string>
 	<string name="noProviderCancelButton">Cancel</string>
+	<string name="gpsEnabledMessage">GPS is enabled. It uses battery even when the screen goes to sleep.\nIt should be disabled to save battery.\nPress OK to display location and security settings.</string>
 
 	<string name="wifiLocationDetailsEditHeader">Edit location</string>
 	<string name="wifiLocationDetailsEditLocation">Location</string>

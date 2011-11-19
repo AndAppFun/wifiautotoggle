@@ -62,10 +62,32 @@ public class WiFiMapActivity extends MapActivity {
 		startService(startServiceIntent);
 	}
 
-	@Override
-	protected void onPause() {
-		myLocationOverlay.disableMyLocation();
-		super.onPause();
+	/**
+	 * Display dialog enabling accessing location & security settings
+	 * 
+	 * @param textResourceId
+	 *            id of the text to be displayed
+	 */
+	private void locationSettingDialog(int textResourceId) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage(textResourceId);
+		builder.setPositiveButton(R.string.noProviderOKButton,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						Intent myIntent = new Intent(
+								Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+						startActivity(myIntent);
+						dialog.cancel();
+					}
+				});
+		builder.setNegativeButton(R.string.noProviderCancelButton,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						dialog.cancel();
+					}
+				});
+		AlertDialog dialog = builder.create();
+		dialog.show();
 	}
 
 	@Override
@@ -93,28 +115,21 @@ public class WiFiMapActivity extends MapActivity {
 			if (location != null) {
 				myLocationOverlay.onLocationChanged(location);
 			}
+
+			/* display the GPS provider warning */
+			if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+				locationSettingDialog(R.string.gpsEnabledMessage);
+			}
 		} else {
-			/* display dialog enabling accessing location & security settings */
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage(R.string.noProviderMessage);
-			builder.setPositiveButton(R.string.noProviderOKButton,
-					new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int id) {
-							Intent myIntent = new Intent(
-									Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-							startActivity(myIntent);
-							dialog.cancel();
-						}
-					});
-			builder.setNegativeButton(R.string.noProviderCancelButton,
-					new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int id) {
-							dialog.cancel();
-						}
-					});
-			AlertDialog dialog = builder.create();
-			dialog.show();
+			/* display no provider warning */
+			locationSettingDialog(R.string.noProviderMessage);
 		}
+	}
+
+	@Override
+	protected void onPause() {
+		myLocationOverlay.disableMyLocation();
+		super.onPause();
 	}
 
 	/**
