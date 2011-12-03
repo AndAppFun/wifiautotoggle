@@ -44,7 +44,7 @@ public class WiFiOnOffService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		
+
 		log = new WiFiLog(getApplicationContext());
 
 		if (log.isDebugEnabled()) {
@@ -66,7 +66,7 @@ public class WiFiOnOffService extends IntentService {
 				WiFiLocation wifiLocation = dbAdapter.getLocation(id);
 
 				if (wifiLocation != null) {
-					
+
 					SharedPreferences preferences = PreferenceManager
 							.getDefaultSharedPreferences(getApplicationContext());
 
@@ -98,9 +98,10 @@ public class WiFiOnOffService extends IntentService {
 	/**
 	 * Toggle Wi-Fi
 	 * 
-	 * @param name
-	 *            location name
-	 * 
+	 * @param intent
+	 *            received intent
+	 * @param wifiLocation
+	 *            Wi-Fi location
 	 */
 	private void toggleWifi(Intent intent, WiFiLocation wifiLocation) {
 		/* get wi-fi manager */
@@ -111,6 +112,8 @@ public class WiFiOnOffService extends IntentService {
 
 		/* is user to be notified (depending on preferences) */
 		boolean bNotify = false;
+
+		WiFiStateStore stateStore = new WiFiStateStore(getApplicationContext());
 
 		if (intent.getBooleanExtra(LocationManager.KEY_PROXIMITY_ENTERING,
 				false)) {
@@ -127,6 +130,7 @@ public class WiFiOnOffService extends IntentService {
 			}
 			if (bNotify) {
 				notifyEnabled(intent, bWiFiEnabled, wifiLocation);
+				stateStore.storeEnabled();
 			}
 		} else {
 			/* turn Wi-Fi off when leaving */
@@ -142,6 +146,7 @@ public class WiFiOnOffService extends IntentService {
 			}
 			if (bNotify) {
 				notifyDisabled(intent, bWiFiEnabled, wifiLocation);
+				stateStore.storeDisabled();
 			}
 		}
 	}
@@ -149,10 +154,12 @@ public class WiFiOnOffService extends IntentService {
 	/**
 	 * Notify that Wi-Fi has been or already is enabled
 	 * 
+	 * @param intent
+	 *            received intent
 	 * @param bWiFiAlreadyEnabled
-	 *            was Wi-Fi enabled before
-	 * @param name
-	 *            location name
+	 *            true when Wi-Fi is already enabled, false otherwise
+	 * @param wifiLocation
+	 *            Wi-Fi location
 	 */
 	private void notifyEnabled(Intent intent, boolean bWiFiAlreadyEnabled,
 			WiFiLocation wifiLocation) {
@@ -201,12 +208,14 @@ public class WiFiOnOffService extends IntentService {
 	}
 
 	/**
-	 * Notify user that Wi-Fi has been or already is disabled
+	 * Notify that Wi-Fi has been or already is disabled
 	 * 
+	 * @param intent
+	 *            received intent
 	 * @param bWiFiAlreadyEnabled
-	 *            was Wi-Fi enabled before
-	 * @param name
-	 *            location name
+	 *            true when Wi-Fi is already enabled, false otherwise
+	 * @param wifiLocation
+	 *            Wi-Fi location
 	 */
 	private void notifyDisabled(Intent intent, boolean bWiFiAlreadyEnabled,
 			WiFiLocation wifiLocation) {

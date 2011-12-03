@@ -48,6 +48,8 @@ public class CurrentLocationOverlay extends MyLocationOverlay {
 	private MapView mapView;
 
 	private WifiManager wifiManager;
+	
+	private WiFiStateStore stateStore;
 
 	private int zoomToAdd;
 
@@ -72,6 +74,8 @@ public class CurrentLocationOverlay extends MyLocationOverlay {
 		this.switcher = switcher;
 
 		this.mapView = mapView;
+		
+		this.stateStore = new WiFiStateStore (context);
 		
 		/* get Wi-Fi manager */
 		wifiManager = (WifiManager) context
@@ -168,13 +172,25 @@ public class CurrentLocationOverlay extends MyLocationOverlay {
 
 					if (bWiFiEnabled) {
 						/* turn off Wi-Fi */
-						if (wifiManager.getWifiState() != WifiManager.WIFI_STATE_DISABLING) {
-							wifiManager.setWifiEnabled(false);
+						boolean bDisabled = false;
+						if (wifiManager.getWifiState() == WifiManager.WIFI_STATE_DISABLING) {
+							bDisabled = true;
+						} else {
+							bDisabled = wifiManager.setWifiEnabled(false);
+						}
+						if (bDisabled) {
+							stateStore.storeDisabled();
 						}
 					} else {
 						/* turn on Wi-Fi */
-						if (wifiManager.getWifiState() != WifiManager.WIFI_STATE_ENABLING) {
-							wifiManager.setWifiEnabled(true);
+						boolean bEnabled = false;
+						if (wifiManager.getWifiState() == WifiManager.WIFI_STATE_ENABLING) {
+							bEnabled = true;
+						} else {
+							bEnabled = wifiManager.setWifiEnabled(true);
+						}
+						if (bEnabled) {
+							stateStore.storeEnabled();
 						}
 					}
 
