@@ -11,9 +11,14 @@
 		<LinearLayout android:layout_width="match_parent"
 			android:id="@+id/wifiLocationlinearLayout" android:layout_height="wrap_content"
 			android:orientation="vertical">
-			<EditText android:layout_height="wrap_content"
-				android:layout_width="match_parent" android:text="@string/wifiLocationDetailsEditLocation"
-				android:id="@+id/wifiLocationDetailsEditLocationName">
+
+			<EditText
+			    android:id="@+id/wifiLocationDetailsEditLocationName"
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:inputType="text"
+			    android:text="@string/wifiLocationDetailsEditLocation" >
+
 			</EditText>
 			<TableLayout android:layout_height="wrap_content"
 				android:layout_width="match_parent" android:id="@+id/wifiLocationEditTable"

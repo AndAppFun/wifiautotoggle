@@ -20,10 +20,6 @@
 	<string name="preferencesLogOn">Logging enabled</string>
 	<string name="preferencesLogOff">Logging disabled</string>
 
-	<string name="menuAbout">About</string>
-	<string name="menuItemAbout">About</string>
-	<string name="menuItemPrefs">Preferences</string>
-
 	<string name="mapMenuItemAbout">About</string>
 	<string name="mapMenuItemPrefs">Preferences</string>
 

@@ -115,38 +115,45 @@ public class WiFiOnOffService extends IntentService {
 
 		WiFiStateStore stateStore = new WiFiStateStore(getApplicationContext());
 
-		if (intent.getBooleanExtra(LocationManager.KEY_PROXIMITY_ENTERING,
-				false)) {
-			/* turn Wi-Fi on when entering */
-			if (bWiFiEnabled
-					|| wifiManager.getWifiState() == WifiManager.WIFI_STATE_ENABLING) {
-				/* only notify when Wi-Fi is enabled or is being enabled */
-				bNotify = true;
-			} else {
-				/* turn on Wi-Fi and notify is turning on was successful */
-				if (wifiManager.setWifiEnabled(true)) {
+		try {
+			if (intent.getBooleanExtra(LocationManager.KEY_PROXIMITY_ENTERING,
+					false)) {
+				/* turn Wi-Fi on when entering */
+				if (bWiFiEnabled
+						|| wifiManager.getWifiState() == WifiManager.WIFI_STATE_ENABLING) {
+					/* only notify when Wi-Fi is enabled or is being enabled */
 					bNotify = true;
+				} else {
+					/* turn on Wi-Fi and notify is turning on was successful */
+					if (wifiManager.setWifiEnabled(true)) {
+						bNotify = true;
+					}
+				}
+				if (bNotify) {
+					notifyEnabled(intent, bWiFiEnabled, wifiLocation);
+					stateStore.storeEnabled();
+				}
+			} else {
+				/* turn Wi-Fi off when leaving */
+				if (!bWiFiEnabled
+						|| wifiManager.getWifiState() == WifiManager.WIFI_STATE_DISABLING) {
+					/* only notify when Wi-Fi is disabled or is being disabled */
+					bNotify = true;
+				} else {
+					/* turn off Wi-Fi and notify is turning off was successful */
+					if (wifiManager.setWifiEnabled(false)) {
+						bNotify = true;
+					}
+				}
+				if (bNotify) {
+					notifyDisabled(intent, bWiFiEnabled, wifiLocation);
+					stateStore.storeDisabled();
 				}
 			}
-			if (bNotify) {
-				notifyEnabled(intent, bWiFiEnabled, wifiLocation);
-				stateStore.storeEnabled();
-			}
-		} else {
-			/* turn Wi-Fi off when leaving */
-			if (!bWiFiEnabled
-					|| wifiManager.getWifiState() == WifiManager.WIFI_STATE_DISABLING) {
-				/* only notify when Wi-Fi is disabled or is being disabled */
-				bNotify = true;
-			} else {
-				/* turn off Wi-Fi and notify is turning off was successful */
-				if (wifiManager.setWifiEnabled(false)) {
-					bNotify = true;
-				}
-			}
-			if (bNotify) {
-				notifyDisabled(intent, bWiFiEnabled, wifiLocation);
-				stateStore.storeDisabled();
+		} catch (SecurityException e) {
+			/* just log the exception */
+			if (log.isErrorEnabled()) {
+				log.error("WiFiOnOffService.toggleWifi(): exception " + e.getMessage());
 			}
 		}
 	}
